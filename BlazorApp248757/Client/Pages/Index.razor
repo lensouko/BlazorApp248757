@@ -1,0 +1,85 @@
+﻿@page "/"
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+
+<a href="https://teratail.com/questions/248757">てらてーる248757</a>
+
+<p>
+    <span style="color:red;">@msg</span>
+</p>
+<p>
+    <textarea @bind="txtarea"
+              @onkeydown="inputDown"
+              @onkeydown:preventDefault="isPrEvDefdown"
+              @onkeyup="inputUp"
+              @onkeyup:preventDefault="isPrEvDefup"
+              @onkeypress="inputPress"
+              @onkeypress:preventDefault="isPrEvDefpress"></textarea>
+</p>
+
+<p>
+    きーログ
+    <div style="height:200px;overflow-y:scroll;">
+        @foreach (var k in Log)
+        {
+            @k<br />
+        }
+    </div>
+</p>
+
+@code
+{
+
+    List<string> Log { get; set; } = new List<string>();
+
+    string txtarea { get; set; } = string.Empty;
+    string msg { get; set; } = string.Empty;
+
+    bool isPrEvDefdown { get; set; } = false;
+
+    private void inputDown(KeyboardEventArgs e)
+    {
+        isPrEvDefdown = IsKey(e, "Tab");
+    }
+
+    bool isPrEvDefpress { get; set; } = false;
+
+    private void inputPress(KeyboardEventArgs e)
+    {
+        isPrEvDefpress = IsKey(e, "Tab");
+    }
+
+
+    bool isPrEvDefup { get; set; } = false;
+
+    private void inputUp(KeyboardEventArgs e)
+    {
+        isPrEvDefup = IsKey(e, "Tab");
+        if (isPrEvDefup)
+        {
+            txtarea = $"\t{txtarea}";
+        }
+    }
+
+    private bool IsKey(KeyboardEventArgs e,string chkKey, [System.Runtime.CompilerServices.CallerMemberName] string member = "")
+    {
+        Log.Add($"{DateTime.Now.ToString("hh:mm:ss.fff")}：[{member}]Key({e.Key})Code({e.Code})");
+        if (e.Key == "Tab")
+        {
+            msg = "たぶ！！";
+            //txtarea = $"\t{txtarea}";
+            return true;
+        }
+        else
+        {
+            msg = string.Empty;
+            return false;
+        }
+    }
+
+}
